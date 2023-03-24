@@ -350,6 +350,7 @@ def main():
         "optimizer_state_offchip": True,
         "enable_half_partials": True,
         "matmul_proportion": 0.3,
+        "executable_cache_dir": "executable_cache_dir",
     }
 
     ipu_config = IPUConfig(**conf)
@@ -443,6 +444,8 @@ def main():
         # Set the training transforms
         ds["train"].set_transform(preprocess_images)
 
+
+    training_args.do_eval = False    #wu
     if training_args.do_eval:
         if "validation" not in ds:
             raise ValueError("--do_eval requires a validation dataset")
@@ -452,6 +455,7 @@ def main():
             )
         # Set the validation transforms
         ds["validation"].set_transform(preprocess_images)
+
 
     # Initialize our trainer
     trainer = IPUTrainer(
