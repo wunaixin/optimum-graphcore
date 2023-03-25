@@ -52,6 +52,7 @@ from .models.roberta import (
 )
 from .models.t5 import PipelinedT5ForConditionalGeneration
 from .models.vit import PipelinedViTForImageClassification
+from .models.swin import PipelinedSwinForMaskedImageModeling
 from .models.wav2vec2 import PipelinedWav2Vec2ForPreTraining
 from .pipelines import IPUFillMaskPipeline, IPUTokenClassificationPipeline, pipeline
 from .trainer import IPUTrainer, IPUTrainerState
