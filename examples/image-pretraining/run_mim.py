@@ -70,7 +70,7 @@ class DataTrainingArguments:
     """
 
     dataset_name: Optional[str] = field(
-        default="cifar10", metadata={"help": "Name of a dataset from the datasets package"}
+        default="imagenet-1k", metadata={"help": "Name of a dataset from the datasets package"}
     )
     dataset_config_name: Optional[str] = field(
         default=None, metadata={"help": "The configuration name of the dataset to use (via the datasets library)."}
@@ -345,16 +345,6 @@ def main():
          ipu_config = IPUConfig.from_pretrained(model_args.model_name_or_path, **config_kwargs)
     else:
         raise RuntimeError("You must provide an IPUConfig")
-    # conf = {
-    #     "replication_factor": 1,
-    #     "optimizer_state_offchip": True,
-    #     "enable_half_partials": True,
-    #     "matmul_proportion": 0.3,
-    #     "executable_cache_dir": "executable_cache_dir",   #wu
-    # }
-
-    # ipu_config = IPUConfig(**conf)
-    # ipu_config.gradient_accumulation_steps = 16    #wu
     
     config.update(
         {

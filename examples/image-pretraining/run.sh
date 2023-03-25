@@ -18,4 +18,5 @@ python run_mim.py \
     --save_strategy epoch \
     --load_best_model_at_end True \
     --save_total_limit 3 \
+    --use_auth_token True \
     --seed 1337
