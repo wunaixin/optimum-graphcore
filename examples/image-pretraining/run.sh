@@ -19,4 +19,5 @@ python run_mim.py \
     --load_best_model_at_end True \
     --save_total_limit 3 \
     --use_auth_token True \
-    --seed 1337
+    --seed 1337 \
+    --dataloader_drop_last

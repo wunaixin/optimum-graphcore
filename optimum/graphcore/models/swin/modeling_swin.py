@@ -54,7 +54,6 @@ class PipelinedSwinForMaskedImageModeling(SwinForMaskedImageModeling, PipelineMi
 
     def __init__(self, config):
         super().__init__(config)
-
     
     def _get_layer_ipu(self):
         ## temporary for Swin-Tiny
@@ -104,6 +103,7 @@ class PipelinedSwinForMaskedImageModeling(SwinForMaskedImageModeling, PipelineMi
         You should call this before doing `save_pretrained` so that the `model.state_dict` is
         compatible with the original model.
         """
+        super().deparallelize()
         return self
 
     def _init_weights(self, module):

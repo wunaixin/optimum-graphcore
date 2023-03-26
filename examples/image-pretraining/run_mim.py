@@ -70,7 +70,7 @@ class DataTrainingArguments:
     """
 
     dataset_name: Optional[str] = field(
-        default="imagenet-1k", metadata={"help": "Name of a dataset from the datasets package"}
+        default="cifar10", metadata={"help": "Name of a dataset from the datasets package"}
     )
     dataset_config_name: Optional[str] = field(
         default=None, metadata={"help": "The configuration name of the dataset to use (via the datasets library)."}

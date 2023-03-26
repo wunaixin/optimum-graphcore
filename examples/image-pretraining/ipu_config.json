@@ -13,5 +13,6 @@
   "replication_factor": 1,
   "gradient_accumulation_steps": 90,
   "device_iterations": 1,
-  "replicated_tensor_sharding": true
+  "replicated_tensor_sharding": true,
+  "executable_cache_dir" : "./exec_cache"
 }
