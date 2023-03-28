@@ -488,7 +488,7 @@ def main():
             swin.layers[i].blocks[j] = poptorch.BeginBlock(block, user_id=f"layer_{i}_block{j}", ipu_id=ipu_id)
             index += 1
 
-    import pdb; pdb.set_trace()
+#    import pdb; pdb.set_trace()
 
 
 

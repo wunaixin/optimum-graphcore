@@ -1110,15 +1110,16 @@ class SwinForMaskedImageModeling(SwinPreTrainedModel):
                 .unsqueeze(1)
                 .contiguous()
             )
-            import pdb
-            pdb.set_trace()
+            #import pdb
+            #pdb.set_trace()
             reconstruction_loss = nn.functional.l1_loss(pixel_values, reconstructed_pixel_values, reduction="none")
-            #reconstruction_loss = nn.functional.l1_loss(pixel_values, reconstructed_pixel_values, reduction="mean")
-            #reconstruction_loss = torch.mean(torch.abs(pixel_values - reconstructed_pixel_values))
-            #masked_im_loss = (reconstruction_loss * mask).sum() / (mask.sum() + 1e-5) / self.config.num_channels
+            #reconstruction_loss = nn.functional.l1_loss(pixel_values, reconstructed_pixel_values, reduction="mean")  #xia
+            #reconstruction_loss = torch.mean(torch.abs(pixel_values - reconstructed_pixel_values))    #xia
+            #masked_im_loss = (reconstruction_loss * mask).sum() / (mask.sum() + 1e-5) / self.config.num_channels   #wu, commented
+            #wu
             import poptorch
-            masked_im_loss = poptorch.identity_loss((reconstruction_loss * mask).sum() / (mask.sum() + 1e-5) / self.config.num_channels, reduction='none')
-
+            #masked_im_loss = poptorch.identity_loss((reconstruction_loss * mask).sum() / (mask.sum() + 1e-5) / self.config.num_channels, reduction='none')
+            masked_im_loss = poptorch.identity_loss((reconstruction_loss * mask.float()).sum() / (mask.float().sum() + 1e-5) / self.config.num_channels, reduction='none')
 
 
         print (f"xiachsh debug  class :{type(masked_im_loss)}")
