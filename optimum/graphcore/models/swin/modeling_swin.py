@@ -167,7 +167,6 @@ class PipelinedSwinForMaskedImageModeling(SwinForMaskedImageModeling, PipelineMi
         [1, 3, 192, 192]
         ```"""
         return_dict = return_dict if return_dict is not None else self.config.use_return_dict
-        print (f"xiachsh debug {type(pixel_values)}, {pixel_values.shape}")
         outputs = self.swin(
             pixel_values,
             bool_masked_pos=bool_masked_pos,
@@ -201,16 +200,15 @@ class PipelinedSwinForMaskedImageModeling(SwinForMaskedImageModeling, PipelineMi
                 .repeat_interleave(self.config.patch_size, 2, output_size = output_size_2)
                 .unsqueeze(1)
                 .contiguous()
-            )
-            reconstruction_loss = nn.functional.l1_loss(pixel_values, reconstructed_pixel_values, reduction="mean")
-            masked_im_loss = poptorch.identity_loss( (reconstruction_loss * mask).sum() / (mask.sum() + 1e-5) / self.config.num_channels, reduction="none" )
+            ).to(torch.float)
 
+            reconstruction_loss = nn.functional.l1_loss(pixel_values, reconstructed_pixel_values, reduction="none").to(torch.float)
+            masked_im_loss = (reconstruction_loss * mask).sum() / (mask.sum() + 1e-5) / self.config.num_channels
+            masked_im_loss = poptorch.identity_loss(masked_im_loss, reduction="none" ).to(torch.half)
 
-        print (f"xiachsh debug  class :{type(masked_im_loss)}")
         if not return_dict:
             output = (reconstructed_pixel_values,) + outputs[2:]
             return ((masked_im_loss,) + output) if masked_im_loss is not None else output
-
 
         return SwinMaskedImageModelingOutput(
             loss=masked_im_loss,
