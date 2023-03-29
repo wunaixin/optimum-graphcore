@@ -24,7 +24,7 @@ import torch
 import torch.utils.checkpoint
 from torch import nn
 from torch.nn import BCEWithLogitsLoss, CrossEntropyLoss, MSELoss
-import poptorch
+
 from ...activations import ACT2FN
 from ...modeling_utils import PreTrainedModel
 from ...pytorch_utils import find_pruneable_heads_and_indices, meshgrid, prune_linear_layer
@@ -1110,14 +1110,24 @@ class SwinForMaskedImageModeling(SwinPreTrainedModel):
                 .unsqueeze(1)
                 .contiguous()
             )
-
+            #import pdb
+            #pdb.set_trace()
             reconstruction_loss = nn.functional.l1_loss(pixel_values, reconstructed_pixel_values, reduction="none")
+            #reconstruction_loss = nn.functional.l1_loss(pixel_values, reconstructed_pixel_values, reduction="mean")  #xia
+            #reconstruction_loss = torch.mean(torch.abs(pixel_values - reconstructed_pixel_values))    #xia
+            #masked_im_loss = (reconstruction_loss * mask).sum() / (mask.sum() + 1e-5) / self.config.num_channels   #wu, commented
+            #wu
+            import poptorch
+            #masked_im_loss = poptorch.identity_loss((reconstruction_loss * mask).sum() / (mask.sum() + 1e-5) / self.config.num_channels, reduction='none')
             masked_im_loss = poptorch.identity_loss((reconstruction_loss * mask.float()).sum() / (mask.float().sum() + 1e-5) / self.config.num_channels, reduction='none')
 
+
+        print (f"xiachsh debug  class :{type(masked_im_loss)}")
         if not return_dict:
             output = (reconstructed_pixel_values,) + outputs[2:]
             return ((masked_im_loss,) + output) if masked_im_loss is not None else output
         
+
         return SwinMaskedImageModelingOutput(
             loss=masked_im_loss,
             logits=reconstructed_pixel_values,
